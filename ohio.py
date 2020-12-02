@@ -53,14 +53,17 @@ class PostgresProvider():
 
         # Cleaning AWS env
         instances = self.ec2.instances.filter(
-            Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
+            Filters=[{'Name': 'instance-state-name', 'Values': ['running']}, {'Name': 'tag:Owner', 'Values': ['warlen']}])
         for instance in instances:
             running_instances.append(instance.id)
 
         # Terminate all instances before start creation proccess
         self.ec2.instances.filter(InstanceIds=running_instances).terminate()
         print(f"Killing {self.region} instances... \n")
-        time.sleep(30)
+
+        self.client.get_waiter('instance_terminated').wait(
+            InstanceIds=running_instances)
+
         print(f"{self.region} instances killed... \n")
         # Deleting Security Groups
         sg = self.client.describe_security_groups()
@@ -152,9 +155,4 @@ class PostgresProvider():
         instance = response['Reservations'][0]['Instances'][0]
         ip = instance['PublicIpAddress']
         print(f"PostgreSQL running at {ip}")
-
-
-server = PostgresProvider()
-server.clean_aws_env()
-server.setting_env_up()
-server.get_instance_ip()
+        return ip
