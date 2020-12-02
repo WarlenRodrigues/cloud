@@ -18,8 +18,8 @@ ip_load_balancer = client.describe_load_balancers(
     LoadBalancerNames=['WebServerLoadBalancer'])['LoadBalancerDescriptions'][0]['DNSName']
 
 print(ip_load_balancer)
-url = 'http://{}:8080/tasks'.format(ip_load_balancer)
-
+# url = 'http://{}:8080/tasks'.format(ip_load_balancer)
+url = 'http://0.0.0.0:8080/tasks'
 while True:
     try:
         print(''' 
@@ -34,11 +34,11 @@ while True:
             # post task
             task = {
                 "title": str(input("Titulo Task: ")),
-                "pub_date": datetime.datetime.now().isoformat(),
+                "pub_date": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "description": str(input("Descrição Task: "))
             }
 
-            r = requests.post(url + "/create", data=json.dumps(payload))
+            r = requests.post(url + "/create", json=task)
             print("\nResponse:", r.text)
 
         elif menu == 1:
