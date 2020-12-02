@@ -18,8 +18,8 @@ ip_load_balancer = client.describe_load_balancers(
     LoadBalancerNames=['WebServerLoadBalancer'])['LoadBalancerDescriptions'][0]['DNSName']
 
 print(ip_load_balancer)
-# url = 'http://{}:8080/tasks'.format(ip_load_balancer)
-url = 'http://0.0.0.0:8080/tasks'
+url = 'http://{}:8080/tasks'.format(ip_load_balancer)
+
 while True:
     try:
         print(''' 
