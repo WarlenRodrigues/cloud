@@ -87,7 +87,7 @@ class ClientProvider():
             sg = self.client.describe_security_groups()
             if len(sg["SecurityGroups"]):
                 for sec in sg["SecurityGroups"]:
-                    if sec['GroupName'] == 'clientsSG1':
+                    if sec['GroupName'] == 'clientsSG2':
                         self.client.delete_security_group(
                             GroupId=sec["GroupId"], GroupName=sec["GroupName"])
                 print(f"{self.region} security groups deleted... \n")
@@ -103,7 +103,7 @@ class ClientProvider():
         try:
             response = self.client.create_security_group(
                 Description='Allow SSH',
-                GroupName='clientsSG1',
+                GroupName='clientsSG2',
                 VpcId=vpc_id,
                 TagSpecifications=[
                     {
@@ -146,14 +146,14 @@ class ClientProvider():
                             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                     ])
 
-                print("All permissions set @ clientsSG1 Security Group... \n")
+                print("All permissions set @ clientsSG2 Security Group... \n")
             except:
-                print("Failed setting permissions to clientsSG1 Security Group! \n")
+                print("Failed setting permissions to clientsSG2 Security Group! \n")
 
-            print("Succeed @ creating Security Group clientsSG1... \n")
+            print("Succeed @ creating Security Group clientsSG2... \n")
 
         except:
-            print("Failed @ creating Security Group clientsSG1! \n")
+            print("Failed @ creating Security Group clientsSG2! \n")
 
     def create_instace(self):
         waiter = self.client.get_waiter('instance_status_ok')
@@ -165,7 +165,7 @@ class ClientProvider():
             MaxCount=1,
             KeyName="warlen",
             TagSpecifications=self.ec2_tags,
-            SecurityGroups=['clientsSG1'],
+            SecurityGroups=['clientsSG2'],
             UserData=self.userdata
         )
         waiter.wait(InstanceIds=[self.instances[0].id])
@@ -173,7 +173,7 @@ class ClientProvider():
 
     def setting_env_up(self):
         # Create Sec Group to give clients necessary iu and out permissions
-        self.create_sg('clientsSG1')
+        self.create_sg('clientsSG2')
         # Create Instance to run clients and provide DB
         self.create_instace()
 
