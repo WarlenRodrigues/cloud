@@ -12,7 +12,7 @@ class ClientProvider():
     def __init__(self, db_ip):
         print("Setting variables... \n")
         self.region = os.getenv("AWS_CLIENTS_REGION")
-        self.image_id = 'ami-08f4fc689c28118cf'
+        self.image_id = 'ami-00ddb0e5626798373'
         self.ec2_tags = [
             {
                 'ResourceType': 'instance',
